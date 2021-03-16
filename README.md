@@ -1,8 +1,8 @@
 # <img src="https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/train.svg" card_color="#222222" width="50" height="50" style="vertical-align:bottom"/> Show Ticket Info
-Lists the information for a ticket specifically chosen by the user. information includes cost, departure time and place, arrival time and place, estimated travel time, among others.
+Lists the information for a ticket specifically chosen by the user.
 
 ## About
-
+This skill will lists the information for only one ticket, which the user will specify. Information includes cost, departure time and place, arrival time and place, estimated travel time, among others.
 
 ## Examples
 * "I would like to select a specific ticket"
