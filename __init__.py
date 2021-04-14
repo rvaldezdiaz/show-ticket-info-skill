@@ -17,27 +17,33 @@ class ShowTicketInfo(MycroftSkill):
         self.speak('Here are the available tickets.')
         
         i=1
+        answer = "yes"
+        while (answer == "yes"):
+            for row in rows:
+                cur.execute("SELECT * FROM TransitLine WHERE LineID = ?", (row[3],))
+                idrow = cur.fetchone()
+                self.speak('Ticket {} starts at {}, ends at {}, has an E.T.A of {}, and costs ${}.'.format(i, row[4], row[5], idrow[3], row[6]))
+                i += 1
 
-        for row in rows:
-            cur.execute("SELECT * FROM TransitLine WHERE LineID = ?", (row[3],))
+            n = int(self.get_response('Which ticket would you like to select?'))
+            m = n
+            n = n - 1
+
+            cur.execute("SELECT * FROM PassData LIMIT 1 OFFSET ?", (n,))
+            ticket = cur.fetchone()
+
+            cur.execute("SELECT * FROM TransitLine WHERE LineID = ?", (ticket[3],))
+
             idrow = cur.fetchone()
-            self.speak('Ticket {} starts at {}, ends at {}, has an E.T.A of {}, and costs ${}.'.format(i, row[4], row[5], idrow[3], row[6]))
-            i += 1
 
-        n = int(self.get_response('Which ticket would you like to select?'))
-        m = n
-        n = n - 1
+            self.speak('You have chosen to view following ticket: \n')
+            self.speak(' {}. Start: {},  End: {},  ETA: {},  Cost: ${}.'.format(m, ticket[4], ticket[5], idrow[3], ticket[6]))
+            #ask what to do after?
+            answer = self.ask_yesno('Would you like to choose another ticket to view? (yes/no): ')
+            if answer == "yes":
+                self.speak('Fetching ticket information...')
 
-        cur.execute("SELECT * FROM PassData LIMIT 1 OFFSET ?", (n,))
-        ticket = cur.fetchone()
-
-        cur.execute("SELECT * FROM TransitLine WHERE LineID = ?", (ticket[3],))
-
-        idrow = cur.fetchone()
-
-        self.speak('You have chosen to view following ticket: \n')
-        self.speak(' {}. Start: {},  End: {},  ETA: {},  Cost: ${}.'.format(m, ticket[4], ticket[5], idrow[3], ticket[6]))
-        #ask what to do after?
+        self.speak('Closing the ticket viewer...')
         conn.close()
         #self.speak_dialog('info.ticket.show')
 
