@@ -14,11 +14,13 @@ class ShowTicketInfo(MycroftSkill):
         cur.execute("SELECT * FROM PassData")
         rows = cur.fetchall()
 
-        self.speak('Here are the available tickets.')
+        #self.speak('Here are the available tickets.')
         
         i=1
         answer = "yes"
         while (answer == "yes"):
+            i = 1
+            self.speak('Here are the available tickets.')
             for row in rows:
                 cur.execute("SELECT * FROM TransitLine WHERE LineID = ?", (row[3],))
                 idrow = cur.fetchone()
@@ -37,7 +39,7 @@ class ShowTicketInfo(MycroftSkill):
             idrow = cur.fetchone()
 
             self.speak('You have chosen to view following ticket: \n')
-            self.speak(' {}. Start: {},  End: {},  ETA: {},  Cost: ${}.'.format(m, ticket[4], ticket[5], idrow[3], ticket[6]))
+            self.speak(' Ticket: {}. Start: {},  End: {},  ETA: {},  Cost: ${}.'.format(m, ticket[4], ticket[5], idrow[3], ticket[6]))
             #ask what to do after?
             answer = self.ask_yesno('Would you like to choose another ticket to view? (yes/no): ')
             if answer == "yes":
